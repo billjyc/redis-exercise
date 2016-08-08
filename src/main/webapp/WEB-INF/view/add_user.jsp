@@ -46,13 +46,14 @@ request.setAttribute("path", path);
 			success: function(data) {
 				//console.log(data);
 				if(data.success == true) {
+					$("addUserForm").resetForm();
 					alert("success!");
 				} else {
 					alert("failed!");
 				}
 			}
 		};
-		$("#addUserForm").ajaxForm();
+		$("#addUserForm").ajaxForm(options);
 		$("#addUserForm").ajaxSubmit(options);
 			
 	}
