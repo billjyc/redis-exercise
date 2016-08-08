@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:mvc="http://www.springframework.org/schema/tx"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans  
                         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd  
                         http://www.springframework.org/schema/context  
@@ -11,7 +11,7 @@
                         http://www.springframework.org/schema/mvc  
                         http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
                         http://www.springframework.org/schema/tx  
-                        http://www.springframework.org/schema/mvc/spring-tx-4.3.xsd">
+                        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	<!-- 自动扫描，以完成Bean创建和自动依赖注入的功能 -->
 	<context:component-scan base-package="demo" />
 	<!-- 引入配置文件 -->
@@ -43,6 +43,13 @@
 		<property name="dataSource" ref="dataSource" />
 		<!-- 自动扫描mapping.xml文件 -->
 		<property name="mapperLocations" value="classpath:demo/mapping/*.xml"></property>
+		<property name="configurationProperties">
+			<props>
+				<prop key="cacheEnabled">true</prop>
+				<prop key="lazyLoadingEnabled">false</prop>
+				<prop key="aggressiveLazyLoading">true</prop>
+			</props>
+		</property>
 	</bean>
 
 	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->

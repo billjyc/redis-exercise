@@ -7,11 +7,20 @@
       
  -->  
 <mapper namespace="demo.dao.IUserDao">  
+
+	<cache type="demo.cache.MyBatisRedisCache" />
+	
+
 	<resultMap type="demo.domain.TUser" id="TUserResult">
-		<id property="id" column="user_id" />
-		<result property="name" column="user_name" />
-		<result property="age" column="user_age" />
+		<id property="id" column="user_id" jdbcType="INTEGER"/>
+		<result property="name" column="user_name" jdbcType="VARCHAR"/>
+		<result property="age" column="user_age" jdbcType="VARCHAR"/>
+		<result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
 	</resultMap>
+	
+	<sql id="Base_Column_List">
+        user_id, user_name, user_age, create_time
+    </sql>
       
     <insert id="save" parameterType="demo.domain.TUser">  
         insert into t_user(user_name,user_age) values(#{userName},#{age})  
@@ -22,16 +31,48 @@
     </update>  
       
     <delete id="delete" parameterType="int">  
-        delete from t_user where user_id=#{id}  
+        delete from t_user where user_id=#{id, jdbcType=INTEGER}  
     </delete>  
       
      <!-- mybsits_config中配置的alias类别名,也可直接配置resultType为类路径 -->    
-    <select id="findById" parameterType="int" resultMap="TUserResult">  
-        select user_id,user_name,user_age from t_user where user_id=#{id}  
+    <select id="findById" parameterType="java.lang.Integer" resultMap="TUserResult">  
+        select <include refid="Base_Column_List" /> from t_user where user_id=#{id}  
     </select>  
-      
+     
     <select id="findAll" resultMap="TUserResult">  
-        select user_id,user_name,user_age from t_user  
+        select <include refid="Base_Column_List" /> from t_user  
     </select>  
-      
+     
+     
+     <insert id="insertSelective" parameterType="demo.domain.TUser">
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                user_id,
+            </if>
+            <if test="name != null">
+                user_name,
+            </if>
+            <if test="age != null">
+                user_age,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="age != null">
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert> 
 </mapper>  
