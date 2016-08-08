@@ -25,4 +25,9 @@ public class IUserServiceImpl implements IUserService {
 		return userDao.findAll();
 	}
 
+	@Override
+	public void addUser(TUser user) throws Exception{
+		userDao.save(user);
+	}
+
 }

@@ -7,4 +7,5 @@ import demo.domain.TUser;
 public interface IUserService {
 	public TUser getUserById(int id);
 	public List<TUser> getAllUsers();
+	public void addUser(TUser user) throws Exception;
 }
