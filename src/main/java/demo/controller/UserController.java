@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import demo.domain.TUser;
 import demo.service.IUserService;
@@ -46,6 +47,7 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
+	@ResponseBody
 	public Map<String, Object> addUser(HttpServletRequest request, Model model) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String name = request.getParameter("name");

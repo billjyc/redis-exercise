@@ -18,6 +18,7 @@ request.setAttribute("path", path);
 	
   </head>
   <script type="text/javascript" src="<%=path %>/js/jquery-3.1.0.min.js"></script>
+  <script type="text/javascript" src="<%=path %>/js/jquery.form.js"></script>
   <body>
     <form id="addUserForm" method="post">
     	<table>
@@ -37,17 +38,22 @@ request.setAttribute("path", path);
 <script type="text/javascript">
 	function addUser() {
 		var url = "<%=basePath%>" + "user/addUser";
-		console.log(url);
-		//$("#addUserForm").attr("action", url);
-		var name = $("#nameId").val();
-		var age = $("#ageId").val();
 		
-		$.post(url, {"name":name, "age":age}, 
-			function(data) {
+		var options = {
+			url: url,
+			type: "POST",
+			dataType: "json",
+			success: function(data) {
+				//console.log(data);
 				if(data.success == true) {
-					$.message.alert("add user success!");
-			}	
-		});
+					alert("success!");
+				} else {
+					alert("failed!");
+				}
+			}
+		};
+		$("#addUserForm").ajaxForm();
+		$("#addUserForm").ajaxSubmit(options);
 			
 	}
 </script>
