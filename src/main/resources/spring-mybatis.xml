@@ -13,11 +13,22 @@
                         http://www.springframework.org/schema/tx  
                         http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	<!-- 自动扫描，以完成Bean创建和自动依赖注入的功能 -->
-	<context:component-scan base-package="demo" />
+	<context:component-scan base-package="demo">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<bean id="springUtils" class="demo.utils.SpringUtils" />
+	
 	<!-- 引入配置文件 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:jdbc.properties" />
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:redis.properties</value>
+			</list>
+		</property>
+		<!-- <property name="location" value="classpath:jdbc.properties" /> -->
 	</bean>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
@@ -56,6 +67,27 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="demo.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<!-- <property name="maxActive" value="${redis.pool.maxActive}" /> -->
+		<property name="maxTotal" value="${redis.pool.maxActive}" />
+		<property name="maxIdle" value="${redis.pool.maxIdle}" />
+		<!-- <property name="maxWait" value="${redis.pool.maxWait}" /> -->
+		<property name="maxWaitMillis" value="${redis.pool.maxWait}" />
+		<property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+	</bean>	
+
+	<!-- redis的连接池pool，不是必选项：timeout/password -->
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1" value="${redis.hostname}" />
+		<constructor-arg index="2" value="${redis.port}" type="int" />
+		<constructor-arg index="3" value="60000" type="int" />
+	</bean>
+	
+	<bean id="redisUtils" class="demo.utils.RedisUtils">
+		<property name="jedisPool" ref="jedisPool" />
 	</bean>
 
 	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->

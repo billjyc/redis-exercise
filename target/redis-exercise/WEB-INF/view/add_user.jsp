@@ -42,15 +42,18 @@ request.setAttribute("path", path);
 		var options = {
 			url: url,
 			type: "POST",
+			dataType: "json",
 			success: function(data) {
+				//console.log(data);
 				if(data.success == true) {
-					$.message.alert("success!");
+					$("addUserForm").resetForm();
+					alert("success!");
 				} else {
-					$.message.alert("failed!");
+					alert("failed!");
 				}
 			}
 		};
-		$("#addUserForm").ajaxForm();
+		$("#addUserForm").ajaxForm(options);
 		$("#addUserForm").ajaxSubmit(options);
 			
 	}
